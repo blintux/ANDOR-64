@@ -1,0 +1,59 @@
+	CODE	Description				ACTIVE
+---------------------------------------------
+ 1	JAO		A Joy Register Out		L			
+ 2	JBO		B Joy Register Out		L			
+ 3	SND		Sound Chip Input		L*			
+ 4	RT1		Real Time Clock 1		L*
+ 5	RT2		Real Time Clock 2		L*
+ 6	MIH		Memory Address High		L
+ 7	MIL		Memory Address Low		L		+
+ 8	RI		RAM Input				H		
+ 9	RO		RAM Out					L**		+
+10	L1		LCD signal 1			H
+11	L2		LCD signal 1			H
+12	L3		LCD signal 1			H
+13	AO		A Register Output		L
+14	AI		A Register Input		L
+15	BO		B Register Output		L
+16	BI		B Register Input		L
+17	EO		ALU Out (ADD)			L
+18	SUB		Subtract				H
+19	SF		Set flags				L
+20	JML		Jump Low				H		+
+21	JMH		Jump High				H
+22	JMN		Jump Negative			H
+23	JMC		Jump Carry				H
+24	JMZ		Jump Zero				H
+25	CE		Counter Enable			H		+
+26	COL		Counter Output Low		L		+
+27	COH		Counter Output High		L
+28	TI		Temp register Input		L
+29	TO		Temp register Output	L
+30	II		Instruction Reg. In		L		+
+31	HLT		Halt					H
+32	ICR		Instruction Clear		H
+
+*  Van külön hex inverter az IC-khez a panelen
+** Ha kellene van a panelen Hex inverter
+
+18 Hex inverter áll rendelkezésre a kontroll panelen
+
+=== Loader PINS ===
+- clock
+- load
+- mil
+- mih
+- ri
+- reset
+- na
+
+
+
+
+=== HIBÁK ===
+- Ha felso memoria cimrol ugrunk vissza zero page-re, akkor tullapoz az RTS. Legalabb is erre jutottam.
+  Atmeneti megoldas: visszateresi ponthoz egy NOP utasitas
+  Ugyanez a hiba, felso teruleten valo subrutin kezeleskor.
+
+
+

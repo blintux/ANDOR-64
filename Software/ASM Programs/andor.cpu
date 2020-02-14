@@ -1,0 +1,97 @@
+#cpudef
+{
+	#bits 8
+	
+	nop        	          -> 8'0x00                                                             ; NOP            Implied
+	hlt                   -> 8'0x03                                                             ; HLT            Implied
+	adc #{imm}	          -> 8'0x02 @ imm[7:0]                                                  ; ADC #nn        Immediate
+	adc {adr}   	      -> { assert(adr <=   0xff), 0x1f @ adr[ 7:0] }                        ; ADC nn         Zeropage
+	adc {adr}	          -> { assert(adr <= 0xffff), 0x1b @ (adr)[7:0] @ (adr)[15:8] }         ; ADC nnnn       Absolute
+	sbc #{imm}            -> 8'0x05 @ imm[7:0]                                                  ; SBC #nn        Immediate
+	sbc {adr}   	      -> { assert(adr <=   0xff), 0x28 @ adr[ 7:0] }                        ; SBC nn         Zeropage
+	sbc {adr}	          -> { assert(adr <= 0xffff), 0x1c @ (adr)[7:0] @ (adr)[15:8] }         ; SBC nnnn       Absolute
+	ldi #{imm}            -> 8'0x01 @ imm[7:0]                                                  ; LDI #nn        Immediate
+	ldt #{imm}            -> 8'0x22 @ imm[7:0]                                                  ; LDT #nn        Immediate
+	ldt {adr}             -> 8'0x23 @ (adr)[7:0] @ (adr)[15:8]                                  ; LDT nnnn       Absolute
+	ldt a                 -> 8'0x21                                                             ; LDT a          Implied    
+	lda {adr}, a          -> 8'0x24 @ (adr)[7:0]                                                ; LDA nn, a      Mixed
+	lda {adr}   	      -> { assert(adr <=   0xff), 0x2F @ adr[ 7:0] }                        ; LDA nn         Zeropage
+	lda {adr}             -> { assert(adr <= 0xffff), 0x0B @ (adr)[7:0] @ (adr)[15:8] }         ; LDA nnnn       Absolute    	
+	sta {adr}	          -> { assert(adr <=   0xff), 0x2E @ adr[ 7:0] }                        ; STA nn         Zeropage
+	sta {adr}             -> { assert(adr <= 0xffff), 0x0A @ (adr)[7:0] @ (adr)[15:8] }         ; STA nnnn       Absolute    
+	stm {adr}, #{i}       -> { assert(adr <=   0xff), 0x35 @ i[7:0] @ adr[7:0] }                ; STM nn         Zeropage
+	stm {adr}, #{i}       -> { assert(adr <= 0xffff), 0x34 @ i[7:0] @ (adr)[7:0] @ (adr)[15:8]} ; STM nnnnn      Absolute
+	stm {adr}, a, #{i}    -> { 8'0x43 @ i[7:0] @ adr[7:0] }              					    ; STM nn, a, #nn 
+	jmp {adr}	          -> { assert(adr <=   0xff), 0x29 @ adr[ 7:0] }                        ; JMP nn         Zeropage
+	jmp {adr}             -> { assert(adr <= 0xffff), 0x04 @ (adr)[7:0] @ (adr)[15:8] }         ; JMP nnnn       Absolute     
+	cmp #{imm}            -> 8'0x06 @ imm[7:0]                                                  ; CMP #nn        Immediate
+	cmp {adr}             -> { assert(adr <=   0xff), 0x2a @ adr[ 7:0] }                        ; CMP nn         Zeropage
+	cmp {adr}             -> { assert(adr <= 0xffff), 0x1d @ (adr)[7:0] @ (adr)[15:8] }         ; CMP nnnnn      Absolute
+	snd #{imm}            -> 8'0x16 @ imm[7:0]                                                  ; SND #nn        Immediate
+	snd {adr}             -> 8'0x1e @ (adr)[7:0] @ (adr)[15:8]                                  ; SND nnnnn      Absolute
+	snd a                 -> 8'0x25                                                             ; SND a          Accu
+	inc a                 -> 8'0x02 @ 0x01                                                      ; INC a          Implied
+	dec a                 -> 8'0x05 @ 0x01                                                      ; DEC a          Implied
+	inc {adr}             -> { assert(adr <=   0xff), 0x31 @ 8'0x01 @ adr[ 7:0] }               ; INC nn         Zeropage
+	inc {adr}             -> { assert(adr <= 0xffff), 0x30 @ 8'0x01 @ (adr)[7:0] @ (adr)[15:8]} ; INC nnnnn      Absolute
+	dec {adr}             -> { assert(adr <=   0xff), 0x33 @ 8'0x01 @ adr[ 7:0] }               ; INC nn         Zeropage
+	dec {adr}             -> { assert(adr <= 0xffff), 0x32 @ 8'0x01 @ (adr)[7:0] @ (adr)[15:8]} ; INC nnnnn      Absolute
+	asl a                 -> 8'0x15                                                             ; ASL            Implied
+	asl {adr}             -> 8'0x42 @ (adr)[7:0] @ (adr)[15:8]                                  ; ASL nnnn                 NEM MUKODIK Már lehet de!? tesztelni!
+	jsr {adr}             -> 8'0x26 @ 8'255 @ 8'254 @ 8'0x04 @ (adr)[7:0] @ (adr)[15:8]         ; JSR nnnn       Absolute
+	rts                   -> 8'0x04 @ 8'253 @ 8'255                                             ; RTS            Implied
+	beq {adr}             -> { assert(adr <=   0xff), fa = adr -1                               ; BEQ nn         Zeropage
+                            8'0x2b @ (fa)[7:0] }
+	beq {adr}             -> { assert(adr <= 0xffff), fa = adr -1                               ; BEQ nnnn       Absolute     
+                            8'0x07 @ (fa)[7:0] @ (fa)[15:8] }
+	bcs {adr}	          -> { assert(adr <=   0xff), fa = adr -1                               ; BCS nn         Zeropage
+                            8'0x2c @ (fa)[7:0] }
+	bcs {adr}             -> { assert(adr <= 0xffff), fa = adr -1                               ; BCS nnnn       Absolute     
+                            8'0x08 @ (fa)[7:0] @ (fa)[15:8] }
+	bmi {adr}	          -> { assert(adr <=   0xff), fa = adr -1                               ; BMI nn         Zeropage
+                            8'0x2d @ (fa)[7:0] }
+	bmi {adr}             -> { assert(adr <= 0xffff), fa = adr -1                               ; BMI nnnn       Absolute     
+                           8'0x09 @ (fa)[7:0] @ (fa)[15:8] }
+	sja {adr}             -> 8'0x17 @ (adr)[7:0] @ (adr)[15:8]                                  ; SJA nnnn         Absolute
+	sjb {adr}             -> 8'0x18 @ (adr)[7:0] @ (adr)[15:8]                                  ; SJB nnnn         Absolute
+	lja a                 -> 8'0x19 @ 8'0x00                                                    ; SJA a            Implied
+	ljb a                 -> 8'0x1a @ 8'0x00                                                    ; SJB a            Implied
+	
+	out i, #{imm}         -> 8'0x0C @ imm[7:0]                                                  ; OUT i, #nn       Immediate
+	out i, {adr}          -> 8'0x0F @ (adr)[7:0] @ (adr)[15:8]                                  ; OUT i, nnnn      Absolute
+	out i, a              -> 8'0x12                                                             ; OUT i, a         Implied
+	out c, #{imm}         -> 8'0x0D @ imm[7:0]                                                  ; OUT c, #nn       Immediate
+	out c, {adr}          -> 8'0x10 @ (adr)[7:0] @ (adr)[15:8]                                  ; OUT c, nnnn      Absolute
+	out c, a              -> 8'0x13                                                             ; OUT c, a         Implied
+	out d, #{imm}         -> 8'0x0E @ imm[7:0]                                                  ; OUT d, #nn       Immediate
+	out d, {adr}          -> 8'0x11 @ (adr)[7:0] @ (adr)[15:8]                                  ; OUT d, nnnn      Absolute
+	out d, a              -> 8'0x14                                                             ; OUT d, a         Implied
+	out i, #{y}, #{x}     -> 8'0x36 @ y[7:0] @ x[7:0]                                           ; OUT i, #x, #y    Immediate
+	out i, a, #{x}        -> 8'0x37 @ x[7:0]                                                    ; OUT i, #a, #y    Immediate
+	out i, #{y}, a        -> 8'0x38 @ y[7:0]                                                    ; OUT i, #x, #a    Immediate
+	out c, a, {adr}       -> 8'0x39 @ adr[7:0]											   	    ; OUT c, a, hh     Absolute
+	out c, a, {adr}, x2   -> 8'0x40 @ adr[7:0]                                                  ; OUT c, a, hh     Absolute
+	out c, a, {adr}, x3   -> 8'0x41 @ adr[7:0]                                                  ; OUT c, a, hh     Absolute
+	out c, a, {adr}, x4   -> 8'0x42 @ adr[7:0]                                                  ; OUT c, a, hh     Absolute
+	out c, #{imm}, x2     -> 8'0x3A @ imm[7:0]                                                  ; OUT c, #nn, x2   Immediate
+	out c, #{imm}, x3     -> 8'0x3B @ imm[7:0]                                                  ; OUT c, #nn, x3   Immediate
+	out c, #{imm}, x4     -> 8'0x3C @ imm[7:0]                                                  ; OUT c, #nn, x4   Immediate
+	out c, {adr}, x2      -> 8'0x3D @ (adr)[7:0] @ (adr)[15:8]                                  ; OUT c, nnnn, x2  Absolute
+	out c, {adr}, x3      -> 8'0x3E @ (adr)[7:0] @ (adr)[15:8]                                  ; OUT c, nnnn, x3  Absolute
+	out c, {adr}, x4      -> 8'0x3F @ (adr)[7:0] @ (adr)[15:8]                                  ; OUT c, nnnn, x4  Absolute
+	out c, a, t           -> 8'0x20                                                             ; OUT c, a, t      Implied
+	out c, {adrh}, {adrl} -> 8'44 @ (adrh)[7:0] @ (adrl)[7:0]                                   ;
+	out c, aa, {adr}      -> 8'0x45 @ (adr)[7:0] @ (adr)[15:8]                                  ; 
+	
+	rtr #{imm},{t},{o}    -> 8'0x34 @ imm[7:0] @ (t)[7:0] @ (o)[7:0]                            ; Read the Real Time Clock
+	rtw #{imm},#{t},#{o}  -> 8'0x35 @ imm[7:0] @   t[7:0] @   o[7:0]                            ; Write the Real Time Clock	
+
+	out text              -> 8'0x0C @ 8'0x30 @ 8'0x0C @ 8'0x0c @ 8'0x0C @ 8'0x01 @              ; OUT text       Implied
+	                         8'0x0C @ 8'0x06
+	out graph             -> 8'0x0C @ 8'0x30 @ 8'0x0C @ 8'0x0c @ 8'0x0C @ 8'0x01 @              ; OUT graph      Implied
+	                         8'0x0C @ 8'0x06 @ 8'0x0C @ 8'0x34 @ 8'0x0C @ 8'0x36 	
+
+	; LCD graphics coordinates:
+	; top: 128x128
+	; bottom: 136x128
+}

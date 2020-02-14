@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1579689085 source:e:\hobby\8bit\andor\programer\loader\main.c
+	<stdio.h>
+	<stdlib.h>
+	<ftdi.h>
+	<string.h>
+	<assert.h>
+
+1581274967 source:e:\hobby\8bit\andor 64\software\loader\main.c
+	<stdio.h>
+	<stdlib.h>
+	<ftdi.h>
+	<string.h>
+	<assert.h>
+

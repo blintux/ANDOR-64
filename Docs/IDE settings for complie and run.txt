@@ -1,0 +1,28 @@
+=== Komodo ===
+
+Complie:
+"E:\Hobby\8bit\ANDOR 64\Software\Complier\customasm.exe" -f hexstr -o "E:\Hobby\8bit\ANDOR 64\Software\Complier\~temp.hex" "E:\Hobby\8bit\ANDOR 64\Software\Complier\andor.cpu" "%F"
+
+Load:
+"E:\Hobby\8bit\ANDOR 64\Software\Loader\bin\Debug\loader.exe" "E:\Hobby\8bit\ANDOR 64\Software\Complier\~temp.hex"
+
+Complie & Load:
+"E:\Hobby\8bit\ANDOR 64\Software\Complier\customasm.exe" -f hexstr -o "E:\Hobby\8bit\ANDOR 64\Software\Complier\~temp.hex" "E:\Hobby\8bit\ANDOR 64\Software\Complier\andor.cpu" "%F" & "E:\Hobby\8bit\ANDOR 64\Software\Loader\bin\Debug\loader.exe" "E:\Hobby\8bit\ANDOR 64\Software\Complier\~temp.hex"
+
+
+=== SASM ===
+
+Assembler options:
+-f hexstr -o $PROGRAM.OBJ$ E:\Hobby\8bit\andor.cpu $SOURCE$
+
+Linker options:
+$PROGRAM.OBJ$ 
+
+Assembler path:
+E:\Hobby\8bit\ANDOR 64\Software\Complier\customasm.exe
+
+Linker path:
+E:\Hobby\8bit\ANDOR 64\Software\Loader\bin\Debug\loader.exe
+
+Object file name:
+program.hex
